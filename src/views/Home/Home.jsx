@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import Profile from '../../components/Profile/Profile'
+import { useUser } from '../../context/UserContext'
 
-const Home = ({ user }) => {
+// const Home = ({ user }) => {
+const Home = () => {
+  const { user } = useUser()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

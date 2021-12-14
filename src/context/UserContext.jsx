@@ -1,18 +1,29 @@
-const { createContext, useState, useContext } = require('react')
+import { createContext, useContext, useEffect, useState } from 'react'
+import { fetchUser } from '../services/user'
 
 const UserContext = createContext()
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState('')
+  const [user, setUser] = useState({})
 
-  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>
+  useEffect(() => {
+    fetchUser()
+      .then((fetchedUser) => {
+        setUser(fetchedUser)
+      })
+      .catch((error) => {
+        throw new Error(`Error: ${error}`)
+      })
+  }, [])
+
+  return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
 }
 
 const useUser = () => {
   const context = useContext(UserContext)
 
   if (context === undefined) {
-    throw new Error('useUser hook must be called within a Usercontext Provider')
+    throw new Error('useUser hook must be called within a UserContext Provider')
   }
 
   return context
